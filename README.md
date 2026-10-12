@@ -67,6 +67,12 @@ npx expo start
 ```
 Scan the QR code using Expo Go. Phone and PC must be on the same Wi-Fi. Expo's official getting-started guide: https://docs.expo.dev/get-started/create-a-project/
 
+### Deploy the web app to Netlify
+
+The repository-root `netlify.toml` configures Netlify to run `npm ci --include=dev && npm run export:web` from `mobile`, then publish `mobile/dist`. Dependency installation is explicit so CLI-driven deploys also install the locked Expo SDK and build tooling before exporting. The `export:web` script uses the project's installed Expo CLI rather than downloading an unrelated latest version through `npx`. This is an Expo application, not a plain HTML site; publishing the repository root without a build does not deploy the app.
+
+Set `EXPO_PUBLIC_API_URL` in Netlify to the deployed HTTPS API URL before deploying. This public setting is included in the web bundle and must not contain secrets. The Express API and its database must be hosted separately; this configuration deploys only the frontend. Without this setting, the app attempts to reach `localhost:4000` on the visitor's computer. The API must allow requests from the deployed site's origin in its CORS configuration.
+
 ## 5. Test core flow
 1. Register the first account. It is created as `USER` by default.
 2. Login with email/password. If 2FA is not enabled, the API returns a temporary token plus a TOTP enrollment URI. For a classroom demo, enter that URI into an authenticator app manually. A later iteration can add a QR-code display.
