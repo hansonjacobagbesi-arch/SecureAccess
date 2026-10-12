@@ -1,0 +1,4 @@
+[build]
+  base = "mobile"
+  command = "npm ci --include=dev && npm run export:web"
+  publish = "dist"
